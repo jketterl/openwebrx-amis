@@ -1,5 +1,5 @@
 variable "jenkins_ssh_key" {
-  type = string
+  type    = string
   default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBVPFD6WawyZFpZGbkNXhk2prn2/pt5JSrWMXMPPmsgNyQXVg3lxPlW7zZSMDJQqLP+mTC/qTyvgqhzc7vxn0LwgkMTCCsEgqSolj6qgbeVOwgCKpukNCO8132XIKLki622vhCXglpCQPOgrOH9u3wU9ipzrMlpraJ9pFDuSQObDSWxFIS2lph1/G9Ox7b3/OG1Pa/dDqWj9xFLH7gB4cS95GG3ncwHPHm2Pd8uvlGoWXoL9LX2znN1Noce9j0dLH4deAJjWg8oDlVXjvfwAlOwZ3hrYl9nFs925kqzd8fKOi6Wlam/Vg1AcTcaFt0jv9wudAoNWF+ise1fMdeDqPR jakob@gamer"
 }
 
@@ -12,12 +12,12 @@ packer {
   }
 }
 
-source "amazon-ebs" "debian" {
-  ami_name      = "openwebrx-jenkins-agent"
-  force_deregister = true
+source "amazon-ebs" "debian-amd64" {
+  ami_name              = "openwebrx-jenkins-agent-amd64"
+  force_deregister      = true
   force_delete_snapshot = true
-  instance_type = "t2.micro"
-  region        = "eu-central-1"
+  instance_type         = "t2.micro"
+  region                = "eu-central-1"
   source_ami_filter {
     filters = {
       name                = "debian-12-amd64-20231013-1532"
@@ -30,10 +30,29 @@ source "amazon-ebs" "debian" {
   ssh_username = "admin"
 }
 
+source "amazon-ebs" "debian-arm64" {
+  ami_name              = "openwebrx-jenkins-agent-arm64"
+  force_deregister      = true
+  force_delete_snapshot = true
+  instance_type         = "a1.medium"
+  region                = "eu-central-1"
+  source_ami_filter {
+    filters = {
+      name                = "debian-12-arm64-20231013-1532"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+    most_recent = true
+    owners      = ["136693071363"]
+  }
+  ssh_username = "admin"
+}
+
 build {
-  name = "learn-packer"
+  name = "docker-build-agent"
   sources = [
-    "source.amazon-ebs.debian"
+    "source.amazon-ebs.debian-amd64",
+    "source.amazon-ebs.debian-arm64"
   ]
   provisioner "shell" {
     inline = [
