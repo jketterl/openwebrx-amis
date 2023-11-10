@@ -13,7 +13,7 @@ packer {
 }
 
 source "amazon-ebs" "debian-amd64" {
-  ami_name              = "openwebrx-jenkins-agent-amd64"
+  ami_name              = "openwebrx-jenkins-agent-docker-amd64"
   force_deregister      = true
   force_delete_snapshot = true
   instance_type         = "t2.micro"
@@ -31,7 +31,7 @@ source "amazon-ebs" "debian-amd64" {
 }
 
 source "amazon-ebs" "debian-arm64" {
-  ami_name              = "openwebrx-jenkins-agent-arm64"
+  ami_name              = "openwebrx-jenkins-agent-docker-arm64"
   force_deregister      = true
   force_delete_snapshot = true
   instance_type         = "a1.medium"
