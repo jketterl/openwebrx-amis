@@ -28,6 +28,11 @@ source "amazon-ebs" "debian-amd64" {
     owners      = ["136693071363"]
   }
   ssh_username = "admin"
+  ami_block_device_mappings {
+    device_name           = "/dev/xvda"
+    volume_size           = 40
+    delete_on_termination = true
+  }
 }
 
 source "amazon-ebs" "debian-arm64" {
@@ -46,6 +51,11 @@ source "amazon-ebs" "debian-arm64" {
     owners      = ["136693071363"]
   }
   ssh_username = "admin"
+  ami_block_device_mappings {
+    device_name           = "/dev/xvda"
+    volume_size           = 40
+    delete_on_termination = true
+  }
 }
 
 build {
